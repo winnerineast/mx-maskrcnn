@@ -1,7 +1,7 @@
 # MX Mask R-CNN
-A MXNet implementation of [Mask R-CNN](https://arxiv.org/abs/1703.06870).
+An MXNet implementation of [Mask R-CNN](https://arxiv.org/abs/1703.06870).
 
-This repository is largely based on the mx-rcnn implementation of Faster RCNN available [here](https://github.com/precedenceguo/mx-rcnn).
+This repository is based largely on the mx-rcnn implementation of Faster RCNN available [here](https://github.com/precedenceguo/mx-rcnn).
 
 
 <div align="center">
@@ -24,36 +24,38 @@ This repository is largely based on the mx-rcnn implementation of Faster RCNN av
 - Backbone: Resnet-50-FPN
 
 ### COCO
-Comming soon, please stay tune.
+Coming soon, please stay tuned.
 
 ## Requirement
 
 We tested our code on:
 
-Ubuntu 16.04, Python 2.7
+Ubuntu 16.04, Python 2.7 with
 
 numpy(1.12.1), cv2(2.4.9), PIL(4.3), matplotlib(2.1.0), cython(0.26.1), easydict
 
 ## Preparation for Training
 
 1. Download Cityscapes data (gtFine_trainvaltest.zip, leftImg8bit_trainvaltest.zip). Extract them into 'data/cityscape/'.
- The folder then look like below:
+ The folder structure would then look as shown below:
 
 ```
 data/cityscape/
-              |->leftImg8bit/
-              |     |-> train/
-              |     |-> val/
-              |     L-> test/
-              |->gtFine/
-              |     |-> train/
-              |     |-> val/
-              |     L-> test/
-              L->imglists/
-                    |->train.lst
-                    |->val.lst
-                    L->test.lst
+├── leftImg8bit/
+│   ├── train/
+│   ├── val/
+│   └── test/
+├── gtFine/
+│   ├── train/
+│   ├── val/
+│   └── test/
+└── imglists/
+    ├── train.lst
+    ├── val.lst
+    └── test.lst
 ```
+
+
 2. Download Resnet-50 pretrained model.
 ```
 bash scripts/download_res50.sh
@@ -92,11 +94,30 @@ bash scripts/eval.sh
 ```
 
 ## Demo
-1. Download model, available at [Dropbox](https://www.dropbox.com/s/zidcbbt7apwg3z6/final-0000.params?dl=0)/[BaiduYun](https://pan.baidu.com/s/1o8n4VMU), and place it in model folder. 
-2. Make sure that you have placed cityscapes data in 'data/cityscapes' folder.
+1. Download model, available at [Dropbox](https://www.dropbox.com/s/zidcbbt7apwg3z6/final-0000.params?dl=0)/[BaiduYun](https://pan.baidu.com/s/1o8n4VMU), and place it in the model folder. 
+2. Make sure that you have the cityscapes data in 'data/cityscapes' folder.
 ```
 bash scripts/demo.sh
 ```
+
+## Test single image
+1. Download model, available at [Dropbox](https://www.dropbox.com/s/zidcbbt7apwg3z6/final-0000.params?dl=0)/[BaiduYun](https://pan.baidu.com/s/1o8n4VMU), and place it in the model folder. 
+2. Follow `Preparation for Training` (step1-step4)
+3. run `bash scripts/demo_single_image.sh`, you can change the image path in script demo_single_image.sh.
+
+## FAQ
+Q: It says **`AttributeError: 'module' object has no attribute 'ROIAlign'`**.
+
+A: This is because either
+ - you forget to copy the operators to your MXNet folder
+ - or you forget to re-compile MXNet and re-install MXNet python interface
+ - or you install the wrong MXNet
+ 
+     Please print `mxnet.__path__` to make sure you use correct MXNet
+     
+Q: I encounter **`incubator-mxnet/mshadow/mshadow/././././cuda/tensor_gpu-inl.cuh:110: Check failed: err == cudaSuccess (7 vs. 0) Name: MapPlanKernel ErrStr:too many resources requested for launch`** at the begining.
+
+A: Please try adding `MSHADOW_CFLAGS += -DMSHADOW_OLD_CUDA=1` in `mxnet/mshadow/make/mshadow.mk` and re-compile MXNet.
 
 ## References
 1. Tianqi Chen, Mu Li, Yutian Li, Min Lin, Naiyan Wang, Minjie Wang, Tianjun Xiao, Bing Xu, Chiyuan Zhang, and Zheng Zhang. MXNet: A Flexible and Efficient Machine Learning Library for Heterogeneous Distributed Systems. In Neural Information Processing Systems, Workshop on Machine Learning Systems, 2015
